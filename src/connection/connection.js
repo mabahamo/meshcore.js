@@ -475,13 +475,13 @@ class Connection extends EventEmitter {
     }
 
     /**
-     * @param {number} manualAddContacts
+     * @param {boolean} manualAddContacts
      * @returns {Promise<void>}
      */
     async sendCommandSetOtherParams(manualAddContacts) {
         const data = new BufferWriter();
         data.writeByte(Constants.CommandCodes.SetOtherParams);
-        data.writeByte(manualAddContacts); // 0 or 1
+        data.writeByte(manualAddContacts ? 1 : 0);
         await this.sendToRadioFrame(data.toBytes());
     }
 
@@ -2569,7 +2569,7 @@ class Connection extends EventEmitter {
     }
 
     /**
-     * @param {number} manualAddContacts
+     * @param {boolean} manualAddContacts
      * @returns {Promise<void>}
      */
     setOtherParams(manualAddContacts) {
@@ -2605,12 +2605,12 @@ class Connection extends EventEmitter {
 
     /** @returns {Promise<void>} */
     async setAutoAddContacts() {
-        return await this.setOtherParams(0);
+        return await this.setOtherParams(false);
     }
 
     /** @returns {Promise<void>} */
     async setManualAddContacts() {
-        return await this.setOtherParams(1);
+        return await this.setOtherParams(true);
     }
 
     /**
