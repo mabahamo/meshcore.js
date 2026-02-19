@@ -32,9 +32,264 @@ import RandomUtils from "../random_utils.js";
  * @typedef {import("../types.js").TelemetryResponsePush} TelemetryResponsePush
  * @typedef {import("../types.js").BinaryResponsePush} BinaryResponsePush
  * @typedef {import("../types.js").NewAdvertPush} NewAdvertPush
+ * @typedef {import("../types.js").AdvertPush} AdvertPush
+ * @typedef {import("../types.js").PathUpdatedPush} PathUpdatedPush
+ * @typedef {import("../types.js").MsgWaitingPush} MsgWaitingPush
+ * @typedef {import("../types.js").ContactsStartResponse} ContactsStartResponse
+ * @typedef {import("../types.js").EndOfContactsResponse} EndOfContactsResponse
+ * @typedef {import("../types.js").CurrTimeResponse} CurrTimeResponse
+ * @typedef {import("../types.js").NoMoreMessagesResponse} NoMoreMessagesResponse
+ * @typedef {import("../types.js").OkResponse} OkResponse
+ * @typedef {import("../types.js").ErrResponse} ErrResponse
+ * @typedef {import("../types.js").DisabledResponse} DisabledResponse
+ * @typedef {import("../types.js").SignStartResponse} SignStartResponse
+ * @typedef {import("../types.js").SignatureResponse} SignatureResponse
  */
 
 class Connection extends EventEmitter {
+
+    /**
+     * @overload
+     * @param {"connected"} event
+     * @param {() => void} callback
+     * @returns {void}
+     */
+    /**
+     * @overload
+     * @param {"disconnected"} event
+     * @param {() => void} callback
+     * @returns {void}
+     */
+    /**
+     * @overload
+     * @param {"rx"} event
+     * @param {(frame: Uint8Array | number[]) => void} callback
+     * @returns {void}
+     */
+    /**
+     * ResponseCodes.Ok
+     * @overload
+     * @param {0} event
+     * @param {(data: OkResponse) => void} callback
+     * @returns {void}
+     */
+    /**
+     * ResponseCodes.Err
+     * @overload
+     * @param {1} event
+     * @param {(data: ErrResponse) => void} callback
+     * @returns {void}
+     */
+    /**
+     * ResponseCodes.ContactsStart
+     * @overload
+     * @param {2} event
+     * @param {(data: ContactsStartResponse) => void} callback
+     * @returns {void}
+     */
+    /**
+     * ResponseCodes.Contact
+     * @overload
+     * @param {3} event
+     * @param {(data: Contact) => void} callback
+     * @returns {void}
+     */
+    /**
+     * ResponseCodes.EndOfContacts
+     * @overload
+     * @param {4} event
+     * @param {(data: EndOfContactsResponse) => void} callback
+     * @returns {void}
+     */
+    /**
+     * ResponseCodes.SelfInfo
+     * @overload
+     * @param {5} event
+     * @param {(data: SelfInfo) => void} callback
+     * @returns {void}
+     */
+    /**
+     * ResponseCodes.Sent
+     * @overload
+     * @param {6} event
+     * @param {(data: SentResponse) => void} callback
+     * @returns {void}
+     */
+    /**
+     * ResponseCodes.ContactMsgRecv
+     * @overload
+     * @param {7} event
+     * @param {(data: ContactMessage) => void} callback
+     * @returns {void}
+     */
+    /**
+     * ResponseCodes.ChannelMsgRecv
+     * @overload
+     * @param {8} event
+     * @param {(data: ChannelMessage) => void} callback
+     * @returns {void}
+     */
+    /**
+     * ResponseCodes.CurrTime
+     * @overload
+     * @param {9} event
+     * @param {(data: CurrTimeResponse) => void} callback
+     * @returns {void}
+     */
+    /**
+     * ResponseCodes.NoMoreMessages
+     * @overload
+     * @param {10} event
+     * @param {(data: NoMoreMessagesResponse) => void} callback
+     * @returns {void}
+     */
+    /**
+     * ResponseCodes.ExportContact
+     * @overload
+     * @param {11} event
+     * @param {(data: ExportContactResponse) => void} callback
+     * @returns {void}
+     */
+    /**
+     * ResponseCodes.BatteryVoltage
+     * @overload
+     * @param {12} event
+     * @param {(data: BatteryVoltageResponse) => void} callback
+     * @returns {void}
+     */
+    /**
+     * ResponseCodes.DeviceInfo
+     * @overload
+     * @param {13} event
+     * @param {(data: DeviceInfo) => void} callback
+     * @returns {void}
+     */
+    /**
+     * ResponseCodes.PrivateKey
+     * @overload
+     * @param {14} event
+     * @param {(data: PrivateKeyResponse) => void} callback
+     * @returns {void}
+     */
+    /**
+     * ResponseCodes.Disabled
+     * @overload
+     * @param {15} event
+     * @param {(data: DisabledResponse) => void} callback
+     * @returns {void}
+     */
+    /**
+     * ResponseCodes.ChannelInfo
+     * @overload
+     * @param {18} event
+     * @param {(data: ChannelInfo) => void} callback
+     * @returns {void}
+     */
+    /**
+     * ResponseCodes.SignStart
+     * @overload
+     * @param {19} event
+     * @param {(data: SignStartResponse) => void} callback
+     * @returns {void}
+     */
+    /**
+     * ResponseCodes.Signature
+     * @overload
+     * @param {20} event
+     * @param {(data: SignatureResponse) => void} callback
+     * @returns {void}
+     */
+    /**
+     * PushCodes.Advert
+     * @overload
+     * @param {0x80} event
+     * @param {(data: AdvertPush) => void} callback
+     * @returns {void}
+     */
+    /**
+     * PushCodes.PathUpdated
+     * @overload
+     * @param {0x81} event
+     * @param {(data: PathUpdatedPush) => void} callback
+     * @returns {void}
+     */
+    /**
+     * PushCodes.SendConfirmed
+     * @overload
+     * @param {0x82} event
+     * @param {(data: SendConfirmedPush) => void} callback
+     * @returns {void}
+     */
+    /**
+     * PushCodes.MsgWaiting
+     * @overload
+     * @param {0x83} event
+     * @param {(data: MsgWaitingPush) => void} callback
+     * @returns {void}
+     */
+    /**
+     * PushCodes.RawData
+     * @overload
+     * @param {0x84} event
+     * @param {(data: RawDataPush) => void} callback
+     * @returns {void}
+     */
+    /**
+     * PushCodes.LoginSuccess
+     * @overload
+     * @param {0x85} event
+     * @param {(data: LoginSuccessPush) => void} callback
+     * @returns {void}
+     */
+    /**
+     * PushCodes.StatusResponse
+     * @overload
+     * @param {0x87} event
+     * @param {(data: StatusResponsePush) => void} callback
+     * @returns {void}
+     */
+    /**
+     * PushCodes.LogRxData
+     * @overload
+     * @param {0x88} event
+     * @param {(data: LogRxDataPush) => void} callback
+     * @returns {void}
+     */
+    /**
+     * PushCodes.TraceData
+     * @overload
+     * @param {0x89} event
+     * @param {(data: TraceDataResult) => void} callback
+     * @returns {void}
+     */
+    /**
+     * PushCodes.NewAdvert
+     * @overload
+     * @param {0x8A} event
+     * @param {(data: NewAdvertPush) => void} callback
+     * @returns {void}
+     */
+    /**
+     * PushCodes.TelemetryResponse
+     * @overload
+     * @param {0x8B} event
+     * @param {(data: TelemetryResponsePush) => void} callback
+     * @returns {void}
+     */
+    /**
+     * PushCodes.BinaryResponse
+     * @overload
+     * @param {0x8C} event
+     * @param {(data: BinaryResponsePush) => void} callback
+     * @returns {void}
+     */
+    /**
+     * @param {string | number} event
+     * @param {Function} callback
+     */
+    on(event, callback) {
+        super.on(event, callback);
+    }
 
     async onConnected() {
 
@@ -345,7 +600,7 @@ class Connection extends EventEmitter {
     }
 
     /**
-     * @param {Uint8Array | any[]} path
+     * @param {Uint8Array | number[]} path
      * @param {Uint8Array} rawData
      * @returns {Promise<void>}
      */
@@ -2178,11 +2433,9 @@ class Connection extends EventEmitter {
                 }
 
                 // send raw data to repeater, for it to repeat zero hop
-                await this.sendCommandSendRawData([
-                    // we set the repeater we want to ping as the path
-                    // it should repeat our packet, and we can listen for it
-                    contactPublicKey.subarray(0, 1),
-                ], rawBytes);
+                // we set the repeater we want to ping as the path
+                // it should repeat our packet, and we can listen for it
+                await this.sendCommandSendRawData(contactPublicKey.subarray(0, 1), rawBytes);
 
             } catch(e) {
                 reject(e);
