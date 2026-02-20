@@ -1,6 +1,3 @@
-/** Unix timestamp in seconds */
-export type EpochSeconds = number;
-
 /** Information about the connected MeshCore device/node. */
 export interface SelfInfo {
     type: number;
